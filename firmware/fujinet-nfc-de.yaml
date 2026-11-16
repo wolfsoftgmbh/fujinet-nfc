@@ -1,0 +1,43 @@
+# Deutsche Fassung: dieselbe Konfiguration, nur die Texte der Oberfläche auf Deutsch.
+# Bauen: esphome compile fujinet-nfc-de.yaml (oder make firmware).
+substitutions:
+  t_friendly_name: FujiNet-NFC-Leser
+  n_address: "FujiNet-Adresse"
+  n_plug: "Steckdose (Tasmota)"
+  n_plug_off: "Ausschaltzeit Steckdose"
+  n_write_path: "Karte beschreiben: Pfad"
+  n_write_btn: "Nächste Karte beschreiben"
+  n_host_slot: "Host-Slot"
+  n_drive: "Laufwerk"
+  n_sound: "Ton"
+  n_last_card: "Letzte Karte"
+  n_last_result: "Letztes Ergebnis"
+  t_bad_write_text: "Kein gültiger Kartentext zum Schreiben (Pfad oder tnfs://server/pfad; .atr .atx .xex .cas, ohne & und =)"
+  t_waiting_write: "Warte auf Karte zum Beschreiben: "
+  t_write_timeout: "Schreiben abgebrochen — keine Karte aufgelegt"
+  t_write_failed: "Karte ließ sich nicht beschreiben"
+  t_unknown_card: "Unbekannte Karte — kein Image-Pfad"
+  t_no_address: "FujiNet-Adresse fehlt"
+  t_no_host_list: "FujiNet liefert keine Host-Liste — Firmware ab v1.6.1 nötig"
+  t_unreachable: "FujiNet nicht erreichbar — Adresse prüfen"
+  t_no_free_slot: "Kein freier Host-Slot im FujiNet für "
+  t_host_not_set: "Server ließ sich im FujiNet nicht eintragen: "
+  t_mounted: "Gemountet: "
+  t_restarting: " — Atari startet neu"
+  t_fujinet_error: "FujiNet meldet Fehler — Pfad, Slot oder Laufwerk prüfen"
+  t_denied: "FujiNet verweigert den Zugriff — Passwortschutz?"
+  t_unexpected: "Unerwartete Antwort (HTTP "
+  t_plug_unreachable: "Steckdose nicht erreichbar — Adresse prüfen"
+  t_plug_error: "Steckdose hat den Neustart abgelehnt (HTTP "
+  t_mount_timeout: "FujiNet hat auf den Mount nicht geantwortet — lädt der Atari gerade? Karte noch einmal auflegen"
+  t_plug_on_failed: "Steckdose hat nicht wieder eingeschaltet — bitte von Hand einschalten"
+  t_written: "Karte beschrieben: "
+  t_written_hint: " — zum Prüfen abheben und neu auflegen"
+  n_status: "Status"
+  n_status_light: "Statuslicht"
+  t_ready: "Bereit"
+  t_st_fujinet: "FujiNet nicht erreichbar"
+  t_st_plug: "Steckdose nicht erreichbar"
+
+packages:
+  basis: !include fujinet-nfc.yaml

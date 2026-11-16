@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 952" width="960" height="952" role="img" aria-labelledby="t d" lang="en">
+<title id="t">Wiring: D1 mini, PN532, WS2812 LED, buzzer</title><desc id="d">PN532 I2C header (in the order GND, VCC, SDA, SCL): SDA to D2, SCL to D1, VCC to 5V, GND to G; DIP switch 1 ON, 2 OFF (I2C). WS2812 board, input side: +5V to 5V, Din to D8, GND to G. Buzzer plus to D7, minus to G. The D1 mini has only one 5V pin and one G pin: all 5V wires and all G wires meet there.</desc>
+<style>text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;fill:#1b1f24}.mono{font-family:ui-monospace,Consolas,Menlo,monospace}.w{fill:none;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}.pl{font-size:14px;font-weight:700}.cap{font-size:16px;font-weight:700}.sm{font-size:14px}.on{fill:#fff}</style>
+<rect x="1" y="1" width="958" height="950" rx="16" fill="#f4f6f8" stroke="#c4cad2" stroke-width="2"/>
+<text x="30" y="42" style="font-size:22px;font-weight:700">Wiring plan</text>
+<g transform="translate(60 40)">
+<rect x="330" y="90" width="360" height="150" rx="10" fill="#1565c0" stroke="#0b3d78" stroke-width="2"/>
+<rect x="340" y="96" width="30" height="24" rx="3" fill="#e0e0e0" stroke="#78909c"/><circle cx="355" cy="108" r="7" fill="#455a64"/>
+<rect x="312" y="136" width="40" height="58" rx="3" fill="#b0b8bf" stroke="#6c757d"/><rect x="336" y="146" width="12" height="38" rx="2" fill="#4a525a"/>
+<rect x="450" y="140" width="130" height="46" rx="3" fill="#cfd4d9" stroke="#8b949c"/>
+<rect x="456" y="136" width="8" height="4" fill="#f5c542"/><rect x="456" y="186" width="8" height="4" fill="#f5c542"/>
+<rect x="472" y="136" width="8" height="4" fill="#f5c542"/><rect x="472" y="186" width="8" height="4" fill="#f5c542"/>
+<rect x="488" y="136" width="8" height="4" fill="#f5c542"/><rect x="488" y="186" width="8" height="4" fill="#f5c542"/>
+<rect x="504" y="136" width="8" height="4" fill="#f5c542"/><rect x="504" y="186" width="8" height="4" fill="#f5c542"/>
+<rect x="520" y="136" width="8" height="4" fill="#f5c542"/><rect x="520" y="186" width="8" height="4" fill="#f5c542"/>
+<rect x="536" y="136" width="8" height="4" fill="#f5c542"/><rect x="536" y="186" width="8" height="4" fill="#f5c542"/>
+<rect x="552" y="136" width="8" height="4" fill="#f5c542"/><rect x="552" y="186" width="8" height="4" fill="#f5c542"/>
+<rect x="568" y="136" width="8" height="4" fill="#f5c542"/><rect x="568" y="186" width="8" height="4" fill="#f5c542"/>
+<text class="sm mono" x="515" y="168" text-anchor="middle" style="fill:#4a525a;font-size:13px">ESP8266</text>
+<path d="M594 188 V148 H610 V188 H626 V148 H642 V188 H658 V148" fill="none" stroke="#e8dca8" stroke-width="3"/>
+<text x="708" y="118" style="font-size:16px;font-weight:700">D1 mini (ESP8266)</text>
+<text class="sm" x="708" y="142">View from the</text>
+<text class="sm" x="708" y="160">component side</text>
+<text class="sm" x="708" y="178">(ESP module)</text>
+<circle cx="385" cy="106" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="385" cy="106" r="3" fill="#0b3d78"/><text class="pl on mono" x="385" y="130" text-anchor="middle" style="opacity:.55">3V3</text>
+<circle cx="385" cy="224" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="385" cy="224" r="3" fill="#0b3d78"/><text class="pl on mono" x="385" y="206" text-anchor="middle" style="">5V</text>
+<circle cx="425" cy="106" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="425" cy="106" r="3" fill="#0b3d78"/><text class="pl on mono" x="425" y="130" text-anchor="middle" style="">D8</text>
+<circle cx="425" cy="224" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="425" cy="224" r="3" fill="#0b3d78"/><text class="pl on mono" x="425" y="206" text-anchor="middle" style="">G</text>
+<circle cx="465" cy="106" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="465" cy="106" r="3" fill="#0b3d78"/><text class="pl on mono" x="465" y="130" text-anchor="middle" style="">D7</text>
+<circle cx="465" cy="224" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="465" cy="224" r="3" fill="#0b3d78"/><text class="pl on mono" x="465" y="206" text-anchor="middle" style="opacity:.55">D4</text>
+<circle cx="505" cy="106" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="505" cy="106" r="3" fill="#0b3d78"/><text class="pl on mono" x="505" y="130" text-anchor="middle" style="opacity:.55">D6</text>
+<circle cx="505" cy="224" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="505" cy="224" r="3" fill="#0b3d78"/><text class="pl on mono" x="505" y="206" text-anchor="middle" style="opacity:.55">D3</text>
+<circle cx="545" cy="106" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="545" cy="106" r="3" fill="#0b3d78"/><text class="pl on mono" x="545" y="130" text-anchor="middle" style="opacity:.55">D5</text>
+<circle cx="545" cy="224" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="545" cy="224" r="3" fill="#0b3d78"/><text class="pl on mono" x="545" y="206" text-anchor="middle" style="">D2</text>
+<circle cx="585" cy="106" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="585" cy="106" r="3" fill="#0b3d78"/><text class="pl on mono" x="585" y="130" text-anchor="middle" style="opacity:.55">D0</text>
+<circle cx="585" cy="224" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="585" cy="224" r="3" fill="#0b3d78"/><text class="pl on mono" x="585" y="206" text-anchor="middle" style="">D1</text>
+<circle cx="625" cy="106" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="625" cy="106" r="3" fill="#0b3d78"/><text class="pl on mono" x="625" y="130" text-anchor="middle" style="opacity:.55">A0</text>
+<circle cx="625" cy="224" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="625" cy="224" r="3" fill="#0b3d78"/><text class="pl on mono" x="625" y="206" text-anchor="middle" style="opacity:.55">RX</text>
+<circle cx="665" cy="106" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="665" cy="106" r="3" fill="#0b3d78"/><text class="pl on mono" x="665" y="130" text-anchor="middle" style="opacity:.55">RST</text>
+<circle cx="665" cy="224" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="665" cy="224" r="3" fill="#0b3d78"/><text class="pl on mono" x="665" y="206" text-anchor="middle" style="opacity:.55">TX</text>
+</g>
+<circle cx="160" cy="480" r="48" fill="#212121" stroke="#000" stroke-width="2"/><circle cx="160" cy="480" r="33" fill="none" stroke="#424242" stroke-width="2"/><circle cx="160" cy="480" r="8" fill="#0d0d0d" stroke="#555"/><text class="pl on" x="160" y="510" text-anchor="middle" style="font-size:18px">+</text>
+<text class="cap" x="160" y="558" text-anchor="middle">Piezo buzzer</text>
+<g transform="translate(-347 -160)">
+<rect x="440" y="340" width="200" height="70" rx="6" fill="#212121" stroke="#000" stroke-width="2"/><rect x="520" y="355" width="42" height="42" rx="4" fill="#ece9e0" stroke="#9e9e9e"/><circle cx="541" cy="376" r="13" fill="#9fb3c2" stroke="#bdbdbd"/><circle cx="541" cy="376" r="4" fill="#6b7f8c"/>
+<rect x="628" y="346" width="18" height="14" rx="4" fill="#cfd3d7" stroke="#8a9096"/><text class="pl on mono" x="620" y="358" text-anchor="end">+5V</text>
+<rect x="628" y="368" width="18" height="14" rx="4" fill="#cfd3d7" stroke="#8a9096"/><text class="pl on mono" x="620" y="380" text-anchor="end">Din</text>
+<rect x="628" y="390" width="18" height="14" rx="4" fill="#cfd3d7" stroke="#8a9096"/><text class="pl on mono" x="620" y="402" text-anchor="end">GND</text>
+<path d="M588 375 H568 M574 369 L568 375 L574 381" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="434" y="346" width="26" height="14" rx="5" fill="#d9a066" stroke="#8a6334"/><text class="pl on mono" x="468" y="358" style="opacity:.6">+5V</text>
+<rect x="434" y="368" width="26" height="14" rx="5" fill="#d9a066" stroke="#8a6334"/><text class="pl on mono" x="468" y="380" style="opacity:.6">DO</text>
+<rect x="434" y="390" width="26" height="14" rx="5" fill="#d9a066" stroke="#8a6334"/><text class="pl on mono" x="468" y="402" style="opacity:.6">GND</text>
+<text class="cap" x="540" y="436" text-anchor="middle">WS2812 LED board</text>
+</g>
+<rect x="420" y="376" width="380" height="360" rx="10" fill="#c62828" stroke="#7f1717" stroke-width="2"/><rect x="428" y="384" width="364" height="344" rx="8" fill="none" stroke="#f3eee6" stroke-width="9"/><rect x="441" y="397" width="338" height="318" rx="5" fill="#b71c1c"/>
+<circle cx="460" cy="418" r="13" fill="#cfd8dc" stroke="#78909c" stroke-width="2"/><circle cx="460" cy="418" r="6" fill="#b71c1c"/>
+<circle cx="758" cy="694" r="13" fill="#cfd8dc" stroke="#78909c" stroke-width="2"/><circle cx="758" cy="694" r="6" fill="#b71c1c"/>
+<circle cx="458" cy="486" r="6" fill="#b71c1c" stroke="#f5c542" stroke-width="3"/><text class="sm mono on" x="472" y="491" style="opacity:.75;font-size:13px">SCK</text>
+<circle cx="458" cy="514" r="6" fill="#b71c1c" stroke="#f5c542" stroke-width="3"/><text class="sm mono on" x="472" y="519" style="opacity:.75;font-size:13px">MSO</text>
+<circle cx="458" cy="542" r="6" fill="#b71c1c" stroke="#f5c542" stroke-width="3"/><text class="sm mono on" x="472" y="547" style="opacity:.75;font-size:13px">MOSI</text>
+<circle cx="458" cy="570" r="6" fill="#b71c1c" stroke="#f5c542" stroke-width="3"/><text class="sm mono on" x="472" y="575" style="opacity:.75;font-size:13px">SS</text>
+<circle cx="458" cy="598" r="6" fill="#b71c1c" stroke="#f5c542" stroke-width="3"/><text class="sm mono on" x="472" y="603" style="opacity:.75;font-size:13px">VCC</text>
+<circle cx="458" cy="626" r="6" fill="#b71c1c" stroke="#f5c542" stroke-width="3"/><text class="sm mono on" x="472" y="631" style="opacity:.75;font-size:13px">GND</text>
+<circle cx="458" cy="654" r="6" fill="#b71c1c" stroke="#f5c542" stroke-width="3"/><text class="sm mono on" x="472" y="659" style="opacity:.75;font-size:13px">IRQ</text>
+<circle cx="458" cy="682" r="6" fill="#b71c1c" stroke="#f5c542" stroke-width="3"/><text class="sm mono on" x="472" y="687" style="opacity:.75;font-size:13px">RSTO</text>
+<rect x="635" y="486" width="56" height="56" rx="3" fill="#212121"/><circle cx="643" cy="494" r="2.5" fill="#666"/>
+<rect x="645" y="454" width="34" height="18" rx="2" fill="#cfd8dc" stroke="#78909c"/>
+<circle cx="766" cy="526" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="539" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="552" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="565" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="578" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="591" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="604" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="617" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="630" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="766" cy="643" r="4.5" fill="none" stroke="#f5c542" stroke-width="2"/>
+<circle cx="525" cy="400" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="525" cy="400" r="3" fill="#7a1010"/><text class="pl on mono" x="525" y="428" text-anchor="middle">GND</text>
+<circle cx="565" cy="400" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="565" cy="400" r="3" fill="#7a1010"/><text class="pl on mono" x="565" y="428" text-anchor="middle">VCC</text>
+<circle cx="605" cy="400" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="605" cy="400" r="3" fill="#7a1010"/><text class="pl on mono" x="605" y="428" text-anchor="middle">SDA</text>
+<circle cx="645" cy="400" r="7" fill="#f5c542" stroke="#8a6d00"/><circle cx="645" cy="400" r="3" fill="#7a1010"/><text class="pl on mono" x="645" y="428" text-anchor="middle">SCL</text>
+<g transform="translate(206 -35)">
+<rect x="344" y="636" width="44" height="44" rx="3" fill="#212121" stroke="#555"/><rect x="350" y="642" width="32" height="14" rx="2" fill="#eceff1"/><rect x="350" y="660" width="32" height="14" rx="2" fill="#eceff1"/><rect x="366" y="644" width="14" height="10" rx="1.5" fill="#37474f"/><rect x="352" y="662" width="14" height="10" rx="1.5" fill="#37474f"/>
+<text class="pl on" x="336" y="653" text-anchor="end">1</text><text class="pl on" x="336" y="671" text-anchor="end">2</text><text class="pl on" x="394" y="662">ON</text>
+<text class="sm on" x="428" y="654" style="font-weight:700">Switch 1 = ON</text><text class="sm on" x="428" y="674" style="font-weight:700">Switch 2 = OFF</text>
+<rect x="334" y="688" width="92" height="52" fill="none" stroke="#ffffff" stroke-opacity=".5"/><rect x="336" y="707" width="88" height="16" fill="#ffd54f" fill-opacity=".28" stroke="#ffd54f" stroke-width="2"/>
+<text class="mono on" x="342" y="702" style="font-size:13px;font-weight:400">HSU 0 0</text>
+<text class="mono on" x="342" y="718" style="font-size:13px;font-weight:700">I2C 1 0</text>
+<text class="mono on" x="342" y="734" style="font-size:13px;font-weight:400">SPI 0 1</text>
+</g>
+<text class="cap" x="610" y="764" text-anchor="middle">PN532 module, set to I²C</text>
+<path class="w" d="M445 264 V310 H478 a7 7 0 0 1 14 0 H565 V400" stroke="#d32f2f"/>
+<path class="w" d="M445 310 H329 V193 H290" stroke="#d32f2f"/>
+<path class="w" d="M485 264 V334 H525 V400" stroke="#263238"/>
+<path class="w" d="M485 334 H313 V237 H290" stroke="#263238"/>
+<path class="w" d="M313 334 H190 V412" stroke="#263238"/>
+<path class="w" d="M605 264 V400" stroke="#1976d2"/>
+<path class="w" d="M645 264 V400" stroke="#f57c00"/>
+<path class="w" d="M485 146 V100 H345 V215 H336 a7 7 0 0 0 -14 0 H290" stroke="#8e24aa"/>
+<path class="w" d="M525 146 V86 H55 V375 H130 V412" stroke="#2e9d4a"/>
+<circle cx="445" cy="310" r="6" fill="#d32f2f"/>
+<circle cx="485" cy="334" r="6" fill="#263238"/>
+<circle cx="313" cy="334" r="6" fill="#263238"/>
+<circle cx="445" cy="264" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="485" cy="264" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="605" cy="264" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="645" cy="264" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="485" cy="146" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="525" cy="146" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="525" cy="400" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="565" cy="400" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="605" cy="400" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="645" cy="400" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="290" cy="193" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="290" cy="215" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="290" cy="237" r="4.5" fill="#f5c542" stroke="#8a6d00"/>
+<circle cx="130" cy="412" r="4.5" fill="#bdbdbd"/><circle cx="190" cy="412" r="4.5" fill="#bdbdbd"/><text class="pl" x="118" y="418" text-anchor="end">+</text><text class="pl" x="202" y="418">−</text>
+<text class="pl" x="385" y="302" text-anchor="middle" style="fill:#d32f2f">5V</text><text class="pl" x="400" y="356" text-anchor="middle" style="fill:#263238">G</text>
+<line x1="30" y1="790" x2="930" y2="790" stroke="#c4cad2"/>
+<text class="cap" x="30" y="818">Legend</text>
+<line x1="30" y1="846" x2="60" y2="846" stroke="#d32f2f" stroke-width="5" stroke-linecap="round"/><text class="sm" x="70" y="851">5V (power)</text>
+<line x1="280" y1="846" x2="310" y2="846" stroke="#263238" stroke-width="5" stroke-linecap="round"/><text class="sm" x="320" y="851">G (ground)</text>
+<line x1="530" y1="846" x2="560" y2="846" stroke="#1976d2" stroke-width="5" stroke-linecap="round"/><text class="sm" x="570" y="851">SDA (I²C data)</text>
+<line x1="30" y1="874" x2="60" y2="874" stroke="#f57c00" stroke-width="5" stroke-linecap="round"/><text class="sm" x="70" y="879">SCL (I²C clock)</text>
+<line x1="280" y1="874" x2="310" y2="874" stroke="#2e9d4a" stroke-width="5" stroke-linecap="round"/><text class="sm" x="320" y="879">Buzzer signal (D7)</text>
+<line x1="530" y1="874" x2="560" y2="874" stroke="#8e24aa" stroke-width="5" stroke-linecap="round"/><text class="sm" x="570" y="879">LED data (D8)</text>
+<text class="sm" x="30" y="910" style="font-weight:700">The D1 mini has only one 5V pin and one G pin.</text>
+<text class="sm" x="30" y="932">Solder all 5V wires together at the 5V pin, all G wires at the G pin.</text>
+</svg>

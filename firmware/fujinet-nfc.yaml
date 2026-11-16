@@ -1,0 +1,928 @@
+# FujiNet-Leser: liest einen Image-Pfad (NDEF-Text) von einer NFC-Karte und
+# mountet ihn per HTTP GET /mount auf einem FujiNet. Autark: kein api:, kein
+# Home Assistant. Einstellungen als Entitäten in der Weboberfläche.
+# Nur gegen firmware/secrets.yaml bauen (Vorlage: secrets.example.yaml).
+
+substitutions:
+  # Alle Texte der Oberfläche. Englisch ist Standard; fujinet-nfc-de.yaml überschreibt sie auf Deutsch.
+  t_friendly_name: FujiNet NFC reader
+  n_address: "FujiNet address"
+  n_plug: "Smart plug (Tasmota)"
+  n_plug_off: "Plug off time"
+  n_write_path: "Write card: text"
+  n_write_btn: "Write next card"
+  n_host_slot: "Host slot"
+  n_drive: "Drive"
+  n_sound: "Sound"
+  n_last_card: "Last card"
+  n_last_result: "Last result"
+  t_bad_write_text: "No valid card text to write (path or tnfs://server/path; .atr .atx .xex .cas, no & or =)"
+  t_waiting_write: "Waiting for a card to write: "
+  t_write_timeout: "Writing cancelled — no card placed"
+  t_write_failed: "Card could not be written"
+  t_unknown_card: "Unknown card — no image path"
+  t_no_address: "FujiNet address missing"
+  t_no_host_list: "FujiNet returned no host list — firmware v1.6.1 or later needed"
+  t_unreachable: "FujiNet unreachable — check the address"
+  t_no_free_slot: "No free host slot on the FujiNet for "
+  t_host_not_set: "Could not add the server to the FujiNet: "
+  t_mounted: "Mounted: "
+  t_restarting: " — restarting the Atari"
+  t_fujinet_error: "FujiNet reports an error — check path, slot or drive"
+  t_denied: "FujiNet denied access — password set?"
+  t_unexpected: "Unexpected answer (HTTP "
+  t_plug_unreachable: "Smart plug unreachable — check the address"
+  t_plug_error: "Smart plug refused the restart (HTTP "
+  t_mount_timeout: "FujiNet did not answer the mount — is the Atari loading? Place the card again"
+  t_plug_on_failed: "Smart plug did not switch back on — switch it on by hand"
+  t_written: "Card written: "
+  t_written_hint: " — lift and put it back to test"
+  n_status: "Status"
+  n_status_light: "Status light"
+  t_ready: "Ready"
+  t_st_fujinet: "FujiNet unreachable"
+  t_st_plug: "Smart plug unreachable"
+
+esphome:
+  name: fujinet-nfc
+  friendly_name: ${t_friendly_name}
+  project:
+    name: "wolfsoft.fujinet-nfc"
+    version: "0.3.0"
+  includes:
+    - fujinet_leser/karte.h
+  on_boot:
+    priority: -10
+    then:
+      # Bereit-Signal, sobald WLAN da ist (auch bei später Ersteinrichtung über
+      # das Portal, die ohne Neustart verbindet). Ohne WLAN: LED gelb, solange
+      # der AP läuft (ap_timeout 20 s = diese Wartezeit).
+      - wait_until:
+          condition:
+            wifi.connected:
+          timeout: 20s
+      - if:
+          condition:
+            wifi.connected:
+          then:
+            - script.execute: bereit
+          else:
+            - light.turn_on:
+                id: led
+                effect: none
+                brightness: 100%
+                red: 100%
+                green: 60%
+                blue: 0%
+            - wait_until:
+                wifi.connected:
+            - light.turn_off: led
+            - script.execute: bereit
+
+# Lokale Kopie des pn532-Moduls: schreibt NTAG ohne vorheriges Löschen und mit
+# Wiederholung je Seite. Siehe components/pn532/README.md.
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [pn532]
+
+esp8266:
+  board: d1_mini
+  # Ohne das liegen Einstellungen nur im RTC-RAM und gehen beim Stromausfall verloren.
+  restore_from_flash: true
+
+preferences:
+  flash_write_interval: 5s
+
+logger:
+
+# Bewusst ohne ssid/password und ohne Netzwerkliste: Mit einem eingetragenen Netz hängt ESPHome den
+# Speicherschlüssel der im Portal gesetzten Zugangsdaten an den Hash der Konfiguration, und jedes
+# Update mit geänderter Konfiguration vergisst das WLAN (ESPHome wifi_component.cpp, has_sta()).
+# Ohne Netz ist der Schlüssel konstant: WLAN kommt über das Portal oder Improv und übersteht Updates.
+wifi:
+  ap:
+    ssid: "FujiNet-NFC"
+    ap_timeout: 20s
+
+captive_portal:
+
+# WLAN per USB-Kabel einrichten (z. B. ESPHome Web nach dem Flashen).
+improv_serial:
+
+web_server:
+  port: 80
+  version: 3
+  local: true
+  # Passwortschutz der Weboberfläche: zum Aktivieren auskommentieren — nur beim
+  # Selbstbauen. Dazu web_username/web_password in secrets.yaml eintragen.
+  # Das Standard-Image bleibt ohne Passwort.
+  # auth:
+  #   username: !secret web_username
+  #   password: !secret web_password
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+i2c:
+  scan: false
+  frequency: 400kHz
+
+http_request:
+  id: http
+  follow_redirects: false
+  esp8266_disable_ssl_support: true
+  # 10 s: FujiNet kann mehrere Sekunden blockieren, etwa beim Schliessen eines
+  # TNFS-Images, dessen Server nicht antwortet (Gerätetest 2026-11-02).
+  timeout: 10s
+
+globals:
+  # Ablaufzustand je Karte: 0 = Mount bereit, 1 = kein Image-Pfad, 2 = Adresse fehlt,
+  # 3 = Host-Liste holen (tnfs://-Karte), 4 = kein freier Host-Slot, 5 = Server in freien
+  # Slot eintragen, 6 = Fehler schon gemeldet.
+  - id: vorpruefung
+    type: int
+    initial_value: "0"
+  - id: mount_url
+    type: std::string
+  # Kartentext zur Anzeige (Pfad oder tnfs://server/pfad)
+  - id: mount_pfad
+    type: std::string
+  # Bei tnfs://-Karten: Server und reiner Pfad, dazu die Anfragen an die Host-Liste
+  - id: mount_host
+    type: std::string
+  - id: mount_nur_pfad
+    type: std::string
+  - id: hosts_url
+    type: std::string
+  - id: host_setzen_url
+    type: std::string
+  - id: gewaehlter_slot
+    type: int
+    initial_value: "-1"
+  # Stufe 2: Mount gelungen, Atari über die Steckdose neu starten
+  - id: neustart_faellig
+    type: bool
+    initial_value: "false"
+  # Mount: Zahl der Versuche und ob das FujiNet überhaupt geantwortet hat
+  - id: mount_versuche
+    type: int
+    initial_value: "0"
+  - id: mount_beantwortet
+    type: bool
+    initial_value: "false"
+  # Stufe 2: Ergebnis der letzten Steckdosen-Anfrage und Zahl der Power-On-Versuche
+  - id: plug_ok
+    type: bool
+    initial_value: "false"
+  - id: plug_versuche
+    type: int
+    initial_value: "0"
+  - id: gelesener_text
+    type: std::string
+  # Schreiben: Pfad, der gerade auf die nächste Karte soll, und ob das
+  # on_finished_write-Ereignis kam (fehlt es, ist das Formatieren gescheitert).
+  - id: schreib_ziel
+    type: std::string
+  - id: geschrieben
+    type: bool
+    initial_value: "false"
+  # Eigene Vorprüfung fürs Schreiben. Nicht vorpruefung mitbenutzen: mount_karte gibt
+  # zwischen Setzen und Lesen die Kontrolle ab (delay), ein Knopfdruck käme dazwischen.
+  - id: schreib_text_gueltig
+    type: bool
+    initial_value: "false"
+  # Ruhelicht: 0 = noch nicht geprüft (aus), 1 = bereit (grün pulsierend),
+  # 2 = FujiNet fehlt, 3 = Steckdose fehlt (beides rot pulsierend).
+  - id: ruhe_zustand
+    type: int
+    initial_value: "0"
+  # Fehlschläge der Statusabfrage in Folge; erst ab 2 gilt ein Gerät als weg,
+  # weil der FujiNet einzelne Anfragen mehrere Sekunden lang blockieren kann.
+  - id: fuji_fehler_folge
+    type: int
+    initial_value: "0"
+  - id: dose_fehler_folge
+    type: int
+    initial_value: "0"
+  - id: status_antwort_ok
+    type: bool
+    initial_value: "false"
+  # Solange Karte gelesen/geschrieben wird, gehört die LED dem Ablauf, nicht dem Ruhelicht.
+  - id: led_beschaeftigt
+    type: bool
+    initial_value: "false"
+  # Solange melde() ihr Ergebnis zeigt (2 s), bleibt das Ruhelicht aus dem Spiel.
+  # Ein Merker statt einer Endzeit: millis() läuft nach 49,7 Tagen über, ein Zeitvergleich
+  # hätte das Ruhelicht nach rund 25 Tagen ohne Ergebnis für ebenso lange gesperrt.
+  - id: melde_aktiv
+    type: bool
+    initial_value: "false"
+
+text:
+  - platform: template
+    name: "${n_address}"
+    id: fuji_adresse
+    mode: text
+    min_length: 0
+    max_length: 64
+    optimistic: true
+    restore_value: true
+    initial_value: ""
+    entity_category: config
+  # Stufe 2: Tasmota-Steckdose vor dem Atari-Netzteil. Leer = kein automatischer Neustart.
+  - platform: template
+    name: "${n_plug}"
+    id: steckdose
+    mode: text
+    min_length: 0
+    max_length: 64
+    optimistic: true
+    restore_value: true
+    initial_value: ""
+    entity_category: config
+  # Pfad für den Knopf "${n_write_btn}". Nicht gespeichert.
+  - platform: template
+    name: "${n_write_path}"
+    id: schreib_pfad
+    mode: text
+    min_length: 0
+    max_length: 100
+    optimistic: true
+    initial_value: ""
+
+button:
+  - platform: template
+    name: "${n_write_btn}"
+    on_press:
+      - script.execute: schreibe_karte
+
+number:
+  - platform: template
+    name: "${n_plug_off}"
+    id: steckdose_aus_s
+    min_value: 1
+    max_value: 30
+    step: 1
+    mode: box
+    unit_of_measurement: s
+    optimistic: true
+    restore_value: true
+    initial_value: 2
+    entity_category: config
+  - platform: template
+    name: "${n_host_slot}"
+    id: host_slot
+    min_value: 0
+    max_value: 7
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    entity_category: config
+  - platform: template
+    name: "${n_drive}"
+    id: laufwerk
+    min_value: 1
+    max_value: 8
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 1
+    entity_category: config
+
+switch:
+  - platform: template
+    name: "${n_sound}"
+    id: ton
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+  # Ruhelicht: LED pulsiert schwach grün (bereit) oder rot (FujiNet/Steckdose fehlt).
+  - platform: template
+    name: "${n_status_light}"
+    id: status_licht
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+    on_turn_on:
+      - script.execute: ruhelicht
+    on_turn_off:
+      - script.execute: ruhelicht
+
+text_sensor:
+  - platform: template
+    name: "${n_last_card}"
+    id: letzte_karte
+  - platform: template
+    name: "${n_last_result}"
+    id: letztes_ergebnis
+  - platform: template
+    name: "${n_status}"
+    id: status_text
+
+output:
+  - platform: esp8266_pwm
+    pin: D7
+    id: summer
+
+rtttl:
+  output: summer
+
+light:
+  - platform: neopixelbus
+    variant: WS2812
+    pin: D8
+    num_leds: 1
+    default_transition_length: 10ms
+    id: led
+    name: "LED"
+    restore_mode: ALWAYS_OFF
+    entity_category: diagnostic
+    effects:
+      # Ruhelicht: schwach, ein Atemzug alle 4 s (3 % bis 30 % der Farbe).
+      # Eigene Rechnung statt pulse: Der pulse-Effekt blendet über die Überblendung von
+      # ESPHome, und dabei blitzte die LED bei jedem zweiten Atemzug kurz voll auf
+      # (Gerätetest 16.11.2026, auch ohne WLAN-Verkehr). Hier wird die LED direkt gesetzt.
+      - addressable_lambda:
+          name: "Idle"
+          update_interval: 20ms
+          lambda: |-
+            const float phase = (millis() % 4000) / 4000.0f;
+            const float anteil = 0.03f + 0.27f * (0.5f - 0.5f * cosf(phase * 6.2831853f));
+            it.all() = current_color * (uint8_t) (anteil * 255.0f);
+
+# Statusabfrage für das Ruhelicht
+interval:
+  - interval: 10s
+    then:
+      - if:
+          condition:
+            and:
+              - wifi.connected:
+              - lambda: 'return !id(led_beschaeftigt);'
+          then:
+            - script.execute: pruefe_status
+          else:
+            # Ohne WLAN ist nichts erreichbar: rot (oder gelb, solange der AP läuft).
+            - if:
+                condition:
+                  not:
+                    wifi.connected:
+                then:
+                  - lambda: 'if (id(ruhe_zustand) != 0) id(ruhe_zustand) = 2;'
+                  - script.execute: ruhelicht
+
+script:
+  # Bereit-Signal: Ton (nur bei Schalter "${n_sound}") und LED kurz grün.
+  - id: bereit
+    then:
+      - if:
+          condition:
+            switch.is_on: ton
+          then:
+            - rtttl.play: "success:d=16,o=5,b=100:c,g,b"
+      # Kein flash_length: Nach dem Blitz kehrt die LED zum vorherigen Zustand zurück,
+      # und nach der Einrichtung über das Portal war das Gelb (Gerätetest 2026-11-02).
+      - light.turn_on:
+          id: led
+          effect: none
+          brightness: 100%
+          red: 0%
+          green: 100%
+          blue: 0%
+      - delay: 500ms
+      - light.turn_off: led
+      - script.execute: ruhelicht
+
+  # Meldet das Ergebnis: Text, Ton (nur bei Schalter "${n_sound}"), LED 2 s grün/rot.
+  - id: melde
+    mode: restart
+    parameters:
+      gut: bool
+      text: string
+    then:
+      - lambda: |-
+          id(letztes_ergebnis).publish_state(text);
+          id(melde_aktiv) = true;
+      - if:
+          condition:
+            switch.is_on: ton
+          then:
+            - if:
+                condition:
+                  lambda: 'return gut;'
+                then:
+                  - rtttl.play: "gut:d=16,o=5,b=125:d,e,f#,a,8d6,p,a,4d6"
+                else:
+                  - rtttl.play: "schlecht:d=8,o=5,b=77:d#,c,4f,4c."
+      - if:
+          condition:
+            lambda: 'return gut;'
+          then:
+            - light.turn_on:
+                id: led
+                effect: none
+                brightness: 100%
+                red: 0%
+                green: 100%
+                blue: 0%
+          else:
+            - light.turn_on:
+                id: led
+                effect: none
+                brightness: 100%
+                red: 100%
+                green: 0%
+                blue: 0%
+      - delay: 2s
+      - lambda: 'id(melde_aktiv) = false;'
+      - script.execute: ruhelicht
+
+  # Ruhezustand der LED: gelb ohne WLAN (AP), sonst je nach Statusabfrage grün oder
+  # rot pulsierend, aus bei Schalter "${n_status_light}" aus oder vor der ersten Abfrage.
+  # Tut nichts, solange eine Karte bearbeitet wird oder melde() ihr Ergebnis zeigt.
+  - id: ruhelicht
+    mode: restart
+    then:
+      - if:
+          condition:
+            lambda: 'return !id(led_beschaeftigt) && !id(melde_aktiv);'
+          then:
+            - if:
+                condition:
+                  wifi.ap_active:
+                then:
+                  - light.turn_on:
+                      id: led
+                      effect: none
+                      brightness: 100%
+                      red: 100%
+                      green: 60%
+                      blue: 0%
+                else:
+                  - if:
+                      condition:
+                        lambda: 'return !id(status_licht).state || id(ruhe_zustand) == 0;'
+                      then:
+                        - light.turn_off: led
+                      else:
+                        # Nur schalten, wenn sich etwas ändert: Jedes turn_on setzt die LED
+                        # für einen Moment auf die volle Farbe, bevor der Effekt wieder
+                        # rechnet. pruefe_status ruft das alle 10 s auf, das war das Aufblitzen
+                        # (Gerätetest 16.11.2026).
+                        - if:
+                            condition:
+                              lambda: |-
+                                const auto &v = id(led).remote_values;
+                                const bool gruen = id(ruhe_zustand) == 1;
+                                const bool schon_so = v.is_on() && id(led).get_effect_name() == "Idle" &&
+                                    (v.get_green() > 0.5f) == gruen && (v.get_red() > 0.5f) == !gruen;
+                                return !schon_so;
+                            then:
+                              - light.turn_on:
+                                  id: led
+                                  effect: "Idle"
+                                  brightness: 100%
+                                  red: !lambda 'return id(ruhe_zustand) == 1 ? 0.0f : 1.0f;'
+                                  green: !lambda 'return id(ruhe_zustand) == 1 ? 1.0f : 0.0f;'
+                                  blue: 0%
+
+  # Fragt FujiNet (/hosts) und, falls eingetragen, die Steckdose (Status) ab. Wartezeit
+  # dafür 2 s statt 10 s: Die Anfrage blockiert den ESP8266, ein ausgeschalteter FujiNet
+  # soll das Kartenlesen nicht lange aufhalten.
+  - id: pruefe_status
+    mode: single
+    then:
+      - if:
+          condition:
+            lambda: 'return fujinet_leser::baue_hosts_url(id(fuji_adresse).state).has_value();'
+          then:
+            - lambda: |-
+                id(status_antwort_ok) = false;
+                id(http).set_timeout(2000);
+            - http_request.get:
+                url: !lambda 'return *fujinet_leser::baue_hosts_url(id(fuji_adresse).state);'
+                on_response:
+                  then:
+                    - lambda: 'id(status_antwort_ok) = response->status_code == 200;'
+            - lambda: |-
+                id(http).set_timeout(10000);
+                id(fuji_fehler_folge) = id(status_antwort_ok) ? 0 : id(fuji_fehler_folge) + 1;
+      - if:
+          condition:
+            lambda: 'return fujinet_leser::baue_steckdosen_status_url(id(steckdose).state).has_value();'
+          then:
+            - lambda: |-
+                id(status_antwort_ok) = false;
+                id(http).set_timeout(2000);
+            - http_request.get:
+                url: !lambda 'return *fujinet_leser::baue_steckdosen_status_url(id(steckdose).state);'
+                on_response:
+                  then:
+                    - lambda: 'id(status_antwort_ok) = response->status_code == 200;'
+            - lambda: |-
+                id(http).set_timeout(10000);
+                id(dose_fehler_folge) = id(status_antwort_ok) ? 0 : id(dose_fehler_folge) + 1;
+          else:
+            - lambda: 'id(dose_fehler_folge) = 0;'
+      - lambda: |-
+          std::string text;
+          if (!fujinet_leser::baue_hosts_url(id(fuji_adresse).state)) {
+            id(ruhe_zustand) = 2;
+            text = "${t_no_address}";
+          } else if (id(fuji_fehler_folge) >= 2) {
+            id(ruhe_zustand) = 2;
+            text = "${t_st_fujinet}";
+          } else if (id(dose_fehler_folge) >= 2) {
+            id(ruhe_zustand) = 3;
+            text = "${t_st_plug}";
+          } else if (id(fuji_fehler_folge) == 0) {
+            id(ruhe_zustand) = 1;
+            text = "${t_ready}";
+          } else {
+            return;  // einzelner Fehlschlag: Zustand bleibt bis zur nächsten Abfrage
+          }
+          if (id(status_text).state != text) id(status_text).publish_state(text);
+      - script.execute: ruhelicht
+
+  # Schreiben: prüft den Pfad mit denselben Regeln wie beim Lesen, schaltet den
+  # PN532 in den Schreibmodus und wartet höchstens 30 s auf eine Karte (LED lila).
+  # Der PN532 schreibt nur auf eine NEU aufgelegte Karte. Liegt sie schon, kurz
+  # abheben. on_finished_write kommt nur bei Erfolg (lokale pn532-Kopie, siehe
+  # components/pn532/README.md).
+  - id: schreibe_karte
+    mode: restart
+    then:
+      - lambda: |-
+          auto ziel = fujinet_leser::lies_karte(id(schreib_pfad).state);
+          id(geschrieben) = false;
+          if (!ziel) {
+            id(schreib_text_gueltig) = false;
+            id(led_beschaeftigt) = false;
+            // Ein noch wartender Schreibauftrag (Knopf zweimal gedrückt) endet hier,
+            // sonst würde die nächste aufgelegte Karte unbemerkt überschrieben.
+            id(pn532_board).read_mode();
+            return;
+          }
+          const std::string kartentext = fujinet_leser::karten_text(*ziel);
+          auto *nachricht = new nfc::NdefMessage();
+          nachricht->add_text_record(kartentext);
+          id(schreib_ziel) = kartentext;
+          id(pn532_board).write_mode(nachricht);  // übernimmt den Zeiger
+          id(schreib_text_gueltig) = true;
+          id(led_beschaeftigt) = true;
+      - if:
+          condition:
+            lambda: 'return !id(schreib_text_gueltig);'
+          then:
+            - script.execute:
+                id: melde
+                gut: false
+                text: "${t_bad_write_text}"
+          else:
+            - lambda: |-
+                id(letztes_ergebnis).publish_state("${t_waiting_write}" + id(schreib_ziel));
+            - light.turn_on:
+                id: led
+                effect: none
+                brightness: 100%
+                red: 60%
+                green: 0%
+                blue: 100%
+            - wait_until:
+                condition:
+                  not:
+                    pn532.is_writing:
+                      id: pn532_board
+                timeout: 30s
+            - if:
+                condition:
+                  pn532.is_writing:
+                      id: pn532_board
+                then:
+                  - lambda: 'id(pn532_board).read_mode();'
+                  - script.execute:
+                      id: melde
+                      gut: false
+                      text: "${t_write_timeout}"
+                else:
+                  - if:
+                      condition:
+                        lambda: 'return !id(geschrieben);'
+                      then:
+                        - script.execute:
+                            id: melde
+                            gut: false
+                            text: "${t_write_failed}"
+            - lambda: 'id(led_beschaeftigt) = false;'
+            - script.execute: ruhelicht
+
+  # Ablauf je Karte. mode single: eine Karte zur Zeit, Rest wird verworfen.
+  - id: mount_karte
+    mode: single
+    parameters:
+      uid: string
+      text: string
+    then:
+      - lambda: 'id(led_beschaeftigt) = true;'
+      - light.turn_on:
+          id: led
+          effect: none
+          brightness: 100%
+          red: 0%
+          green: 0%
+          blue: 100%
+      - lambda: |-
+          id(letzte_karte).publish_state(uid + " " + text);
+          auto ziel = fujinet_leser::lies_karte(text);
+          if (!ziel) {
+            id(vorpruefung) = 1;
+            return;
+          }
+          id(mount_pfad) = fujinet_leser::karten_text(*ziel);
+          id(mount_host) = ziel->host;
+          id(mount_nur_pfad) = ziel->pfad;
+          if (!ziel->host.empty()) {
+            // tnfs://-Karte: erst in der Host-Liste des FujiNet den Slot des Servers suchen
+            auto hosts = fujinet_leser::baue_hosts_url(id(fuji_adresse).state);
+            if (!hosts) {
+              id(vorpruefung) = 2;
+              return;
+            }
+            id(hosts_url) = *hosts;
+            id(vorpruefung) = 3;
+            return;
+          }
+          auto url = fujinet_leser::baue_mount_url(
+              id(fuji_adresse).state, (int) id(host_slot).state, (int) id(laufwerk).state, ziel->pfad);
+          if (!url) {
+            id(vorpruefung) = 2;
+            return;
+          }
+          id(mount_url) = *url;
+          id(vorpruefung) = 0;
+      - if:
+          condition:
+            lambda: 'return id(vorpruefung) == 1;'
+          then:
+            - script.execute:
+                id: melde
+                gut: false
+                text: "${t_unknown_card}"
+      - if:
+          condition:
+            lambda: 'return id(vorpruefung) == 2;'
+          then:
+            - script.execute:
+                id: melde
+                gut: false
+                text: "${t_no_address}"
+      # tnfs://-Karte: Host-Liste holen (GET /hosts, FujiNet ab v1.6.1). Steht der Server
+      # darin, wird sein Slot genommen; sonst kommt er in den ersten freien Slot. Belegte
+      # Slots werden nie überschrieben. Die http_request-Aktionen laufen synchron, die
+      # folgenden if-Blöcke sehen also das Ergebnis.
+      - if:
+          condition:
+            lambda: 'return id(vorpruefung) == 3;'
+          then:
+            - delay: 1ms  # aus dem PN532-Lesevorgang lösen, siehe unten
+            - http_request.get:
+                url: !lambda 'return id(hosts_url);'
+                capture_response: true
+                max_response_buffer_size: 1024
+                on_response:
+                  then:
+                    - lambda: |-
+                        if (response->status_code != 200) {
+                          id(vorpruefung) = 6;
+                          id(melde).execute(false, "${t_no_host_list}");
+                          return;
+                        }
+                        int slot = fujinet_leser::finde_host_slot(body, id(mount_host));
+                        if (slot < 0) {
+                          int frei = fujinet_leser::freier_host_slot(body);
+                          if (frei < 0) {
+                            id(vorpruefung) = 4;
+                            return;
+                          }
+                          auto setzen = fujinet_leser::baue_host_setzen_url(id(fuji_adresse).state, frei, id(mount_host));
+                          id(host_setzen_url) = setzen.value_or("");
+                          id(gewaehlter_slot) = frei;
+                          id(vorpruefung) = 5;
+                          return;
+                        }
+                        auto url = fujinet_leser::baue_mount_url(
+                            id(fuji_adresse).state, slot, (int) id(laufwerk).state, id(mount_nur_pfad));
+                        id(mount_url) = url.value_or("");
+                        id(vorpruefung) = url ? 0 : 2;
+                on_error:
+                  then:
+                    - lambda: 'id(vorpruefung) = 6;'
+                    - script.execute:
+                        id: melde
+                        gut: false
+                        text: "${t_unreachable}"
+      - if:
+          condition:
+            lambda: 'return id(vorpruefung) == 4;'
+          then:
+            - script.execute:
+                id: melde
+                gut: false
+                text: !lambda 'return "${t_no_free_slot}" + id(mount_host);'
+      - if:
+          condition:
+            lambda: 'return id(vorpruefung) == 5;'
+          then:
+            - http_request.post:
+                url: !lambda 'return id(host_setzen_url);'
+                body: ""
+                capture_response: true
+                max_response_buffer_size: 1024
+                on_response:
+                  then:
+                    - lambda: |-
+                        // Die Antwort ist die neue Host-Liste; der Server muss jetzt im gewählten Slot stehen.
+                        if (response->status_code != 200 ||
+                            fujinet_leser::finde_host_slot(body, id(mount_host)) != id(gewaehlter_slot)) {
+                          id(vorpruefung) = 6;
+                          id(melde).execute(false, "${t_host_not_set}" + id(mount_host));
+                          return;
+                        }
+                        auto url = fujinet_leser::baue_mount_url(
+                            id(fuji_adresse).state, id(gewaehlter_slot), (int) id(laufwerk).state, id(mount_nur_pfad));
+                        id(mount_url) = url.value_or("");
+                        id(vorpruefung) = url ? 0 : 2;
+                on_error:
+                  then:
+                    - lambda: 'id(vorpruefung) = 6;'
+                    - script.execute:
+                        id: melde
+                        gut: false
+                        text: "${t_unreachable}"
+      - if:
+          condition:
+            lambda: 'return id(vorpruefung) == 0;'
+          then:
+            # Aus dem Lesevorgang des PN532 heraus bricht der Verbindungsaufbau am ESP8266
+            # sofort ab (Gerätetest 2026-11-02: SYN, gleich danach RST). Die Verzögerung
+            # verlegt die Anfrage in die normale Hauptschleife, wo sie gelingt.
+            - delay: 1ms
+            # Beantwortet das FujiNet den Mount nicht (z. B. während der Atari lädt), kommt nach
+            # 2 s genau ein zweiter Versuch; die Auswertung steht nur einmal hier.
+            - lambda: |-
+                id(mount_versuche) = 0;
+                id(mount_beantwortet) = false;
+            - while:
+                condition:
+                  lambda: 'return !id(mount_beantwortet) && id(mount_versuche) < 2;'
+                then:
+                  - lambda: 'id(mount_versuche)++;'
+                  - http_request.get:
+                      url: !lambda 'return id(mount_url);'
+                      capture_response: true
+                      max_response_buffer_size: 1024
+                      on_response:
+                        then:
+                          - lambda: |-
+                              id(mount_beantwortet) = true;
+                              using fujinet_leser::MountErgebnis;
+                              switch (fujinet_leser::werte_antwort_aus(response->status_code, body)) {
+                                case MountErgebnis::erfolg:
+                                  id(neustart_faellig) = fujinet_leser::baue_steckdose_aus_url(id(steckdose).state).has_value();
+                                  id(melde).execute(true, "${t_mounted}" + id(mount_pfad) +
+                                                              (id(neustart_faellig) ? "${t_restarting}" : ""));
+                                  break;
+                                case MountErgebnis::fehler_fujinet:
+                                  id(melde).execute(false, "${t_fujinet_error}");
+                                  break;
+                                case MountErgebnis::verweigert:
+                                  id(melde).execute(false, "${t_denied}");
+                                  break;
+                                case MountErgebnis::nicht_erreichbar:
+                                  id(melde).execute(false, "${t_unreachable}");
+                                  break;
+                                default:
+                                  id(melde).execute(false, "${t_unexpected}" + to_string(response->status_code) + ")");
+                                  break;
+                              }
+                  - if:
+                      condition:
+                        lambda: 'return !id(mount_beantwortet) && id(mount_versuche) < 2;'
+                      then:
+                        - delay: 2s
+            - if:
+                condition:
+                  lambda: 'return !id(mount_beantwortet);'
+                then:
+                  - script.execute:
+                      id: melde
+                      gut: false
+                      text: "${t_mount_timeout}"
+            # Stufe 2: Atari aus, Pause, an. Das FujiNet hat den Mount gespeichert und bootet ihn
+            # (boot_mode 1) bzw. zeigt ihn in CONFIG. Aus und An sind getrennte Anfragen, die Pause
+            # läuft hier (delay blockiert nicht): Ein Backlog-Delay in der Steckdose bricht jede
+            # fremde Anfrage ab. led_beschaeftigt bleibt gesetzt, die Statusabfrage pausiert.
+            # Kurzes Zeitlimit, damit kein Versuch den ESP8266 (Watchdog) lange blockiert.
+            - if:
+                condition:
+                  lambda: 'return id(neustart_faellig);'
+                then:
+                  - lambda: |-
+                      id(neustart_faellig) = false;
+                      id(plug_ok) = false;
+                      id(http).set_timeout(2000);
+                  - http_request.get:
+                      url: !lambda 'return fujinet_leser::baue_steckdose_aus_url(id(steckdose).state).value_or("");'
+                      on_response:
+                        then:
+                          - lambda: |-
+                              // Tasmota antwortet auf /cm mit 200. 401 = Passwort gesetzt,
+                              // 404 = falsches Gerät: dann startet der Atari nicht neu.
+                              id(plug_ok) = response->status_code == 200;
+                              if (!id(plug_ok)) {
+                                id(melde).execute(false, "${t_plug_error}" + to_string(response->status_code) + ")");
+                              }
+                      on_error:
+                        then:
+                          - script.execute:
+                              id: melde
+                              gut: false
+                              text: "${t_plug_unreachable}"
+                  - lambda: 'id(http).set_timeout(10000);'
+                  - if:
+                      condition:
+                        lambda: 'return id(plug_ok);'
+                      then:
+                        - delay: !lambda 'return fujinet_leser::klemme_aus_sekunden(std::isnan(id(steckdose_aus_s).state) ? 2 : (int) id(steckdose_aus_s).state) * 1000;'
+                        - lambda: |-
+                            id(plug_ok) = false;
+                            id(plug_versuche) = 0;
+                            id(http).set_timeout(2000);
+                        # Bis zu drei Versuche im Abstand von 1 s
+                        - while:
+                            condition:
+                              lambda: 'return !id(plug_ok) && id(plug_versuche) < 3;'
+                            then:
+                              - lambda: 'id(plug_versuche)++;'
+                              - http_request.get:
+                                  url: !lambda 'return fujinet_leser::baue_steckdose_an_url(id(steckdose).state).value_or("");'
+                                  on_response:
+                                    then:
+                                      - lambda: 'id(plug_ok) = response->status_code == 200;'
+                              - if:
+                                  condition:
+                                    lambda: 'return !id(plug_ok);'
+                                  then:
+                                    - delay: 1s
+                        - lambda: 'id(http).set_timeout(10000);'
+                        - if:
+                            condition:
+                              lambda: 'return !id(plug_ok);'
+                            then:
+                              - script.execute:
+                                  id: melde
+                                  gut: false
+                                  text: "${t_plug_on_failed}"
+      - lambda: 'id(led_beschaeftigt) = false;'
+      - script.execute: ruhelicht
+
+pn532_i2c:
+  id: pn532_board
+  on_finished_write:
+    - lambda: 'id(geschrieben) = true;'
+    - script.execute:
+        id: melde
+        gut: true
+        text: !lambda 'return "${t_written}" + id(schreib_ziel) + "${t_written_hint}";'
+  on_tag:
+    then:
+      - lambda: |-
+          // NDEF: ESPHome 2026.10.1 zerlegt Text-Records (TNF well-known, Typ "T")
+          // schon selbst: NdefRecordText::get_payload() liefert nur den Text, ohne
+          // Statusbyte und Sprachcode. text_aus_ndef_payload() wird hier daher
+          // NICHT aufgerufen (es würde das erste Zeichen als Status verschlucken).
+          // Andere Record-Typen (z. B. URI) bleiben leer = "Unbekannte Karte".
+          std::string text;
+          if (tag.has_ndef_message()) {
+            const auto &records = tag.get_ndef_message()->get_records();
+            if (!records.empty() && records[0]->get_type() == "T") text = records[0]->get_payload();
+          }
+          id(gelesener_text) = text;
+      - if:
+          condition:
+            lambda: |-
+              // Entpreller: gleiche UID innerhalb 3000 ms ignorieren. Statisch
+              // statt globals:, weil globals vor dem includes-Header erzeugt wird.
+              static fujinet_leser::Entpreller entpreller(3000);
+              return entpreller.neu(x, millis());
+          then:
+            - script.execute:
+                id: mount_karte
+                uid: !lambda 'return x;'
+                text: !lambda 'return id(gelesener_text);'

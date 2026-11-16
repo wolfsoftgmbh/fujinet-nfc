@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>FujiNet NFC reader – Flash / Leser flashen</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #1b1f24; --muted: #4d5661;
+  --line: #d3d8de; --accent: #0b5cad; --accent-text: #ffffff; --warn: #fff3cd; --warn-line: #d9b44a;
+  --rand: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151a; --card: #1c2128; --text: #e8ebef; --muted: #aab3be;
+    --line: #38404a; --accent: #5aa7ee; --accent-text: #08121e; --warn: #3a3217; --warn-line: #8a7424;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+main { max-width: 44rem; margin: 0 auto; padding: 24px var(--rand) 48px; }
+h1 { font-size: 1.7rem; line-height: 1.2; margin: 0 0 8px; }
+h2 { font-size: 1.2rem; margin: 28px 0 8px; }
+p, li { overflow-wrap: anywhere; }
+.lead { color: var(--muted); margin: 0 0 20px; }
+.sprache { display: flex; gap: 8px; margin-bottom: 20px; }
+.sprache button {
+  font: inherit; padding: 8px 16px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--card); color: var(--text); cursor: pointer;
+}
+.sprache button[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+.karte { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.flash {
+  font: inherit; font-weight: 600; padding: 12px 24px; border: 0; border-radius: 8px;
+  background: var(--accent); color: var(--accent-text); cursor: pointer;
+}
+.hinweis { display: block; background: var(--warn); border: 1px solid var(--warn-line); border-radius: 8px; padding: 10px 12px; margin: 12px 0 0; }
+ol, ul { padding-left: 1.4rem; }
+a { color: var(--accent); }
+html[data-lang="en"] [lang="de"], html[data-lang="de"] [lang="en"] { display: none; }
+</style>
+</head>
+<body>
+<main>
+<div class="sprache" role="group" aria-label="Language / Sprache">
+  <button type="button" data-wahl="en" aria-pressed="true">English</button>
+  <button type="button" data-wahl="de" aria-pressed="false">Deutsch</button>
+</div>
+
+<section lang="en">
+  <h1>FujiNet NFC reader: install the software</h1>
+  <p class="lead">This page puts the software onto your reader (a D1 mini with an NFC module) over USB. You do not need to install anything on your computer.</p>
+
+  <div class="karte">
+    <p><strong>Before you start</strong></p>
+    <ul>
+      <li>Use <strong>Chrome or Edge on a Windows, Mac or Linux computer</strong>. Firefox, Safari, phones and tablets cannot do this.</li>
+      <li>Plug the D1 mini into the computer with a USB <em>data</em> cable (some cables only charge). Many D1 minis need the free <strong>CH340 driver</strong> first; if the list in step 2 stays empty, install it and plug the reader in again.</li>
+    </ul>
+    <ol>
+      <li>Click <strong>Install reader (English)</strong> below.</li>
+      <li>Pick your D1 mini in the window that opens (often called &ldquo;USB-SERIAL CH340&rdquo;) and click Connect.</li>
+      <li>You are asked whether to <strong>erase</strong> the device first. For a new reader, either answer works. If the reader already has your WiFi saved, <strong>Erase deletes that WiFi</strong>; leave it unticked to keep it.</li>
+      <li>Wait until the installation is done (about a minute). Then enter the name and password of your home WiFi when asked.</li>
+    </ol>
+    <p>
+      <esp-web-install-button manifest="manifest-en.json">
+        <button slot="activate" class="flash" type="button">Install reader (English)</button>
+        <span slot="unsupported" class="hinweis">This browser cannot install the software. Open this page in <strong>Chrome or Edge on a desktop or laptop computer</strong>. Firefox, Safari and phones do not work.</span>
+        <span slot="not-allowed" class="hinweis">Installing only works on a secure page (address starting with <strong>https://</strong>). Open this page with its https address instead.</span>
+      </esp-web-install-button>
+    </p>
+  </div>
+  <p>After that, the reader shows its own web page in your home network. Follow the guide for the next steps: <a href="https://github.com/wolfsoftgmbh/fujinet-nfc/blob/main/docs/guide-en.md">English</a> · <a href="https://github.com/wolfsoftgmbh/fujinet-nfc/blob/main/docs/anleitung-de.md">Deutsch</a>.</p>
+</section>
+
+<section lang="de">
+  <h1>FujiNet-NFC-Leser: Software aufspielen</h1>
+  <p class="lead">Diese Seite spielt die Software über USB auf Deinen Leser (ein D1 mini mit NFC-Modul). Auf dem Computer musst Du nichts installieren.</p>
+
+  <div class="karte">
+    <p><strong>Vorher</strong></p>
+    <ul>
+      <li>Nimm <strong>Chrome oder Edge auf einem Windows-, Mac- oder Linux-Computer</strong>. Firefox, Safari, Handys und Tablets können das nicht.</li>
+      <li>Stecke den D1 mini mit einem USB-<em>Datenkabel</em> an den Computer (manche Kabel laden nur). Viele D1 mini brauchen zuerst den kostenlosen <strong>CH340-Treiber</strong>; bleibt die Liste in Schritt 2 leer, installiere ihn und stecke den Leser neu an.</li>
+    </ul>
+    <ol>
+      <li>Klicke unten auf <strong>Leser installieren (Deutsch)</strong>.</li>
+      <li>Wähle im Fenster Deinen D1 mini aus (oft &bdquo;USB-SERIAL CH340&ldquo;) und klicke auf Verbinden.</li>
+      <li>Dann fragt das Fenster, ob das Gerät vorher <strong>gelöscht (Erase)</strong> werden soll. Bei einem neuen Leser geht beides. Hat der Leser Dein WLAN schon gespeichert, <strong>löscht Erase dieses WLAN</strong>; ohne Haken bleibt es erhalten.</li>
+      <li>Warte, bis die Installation fertig ist (etwa eine Minute). Gib dann Namen und Passwort Deines WLANs ein, wenn danach gefragt wird.</li>
+    </ol>
+    <p>
+      <esp-web-install-button manifest="manifest-de.json">
+        <button slot="activate" class="flash" type="button">Leser installieren (Deutsch)</button>
+        <span slot="unsupported" class="hinweis">Dieser Browser kann die Software nicht aufspielen. Öffne die Seite in <strong>Chrome oder Edge auf einem Desktop- oder Laptop-Computer</strong>. Firefox, Safari und Handys gehen nicht.</span>
+        <span slot="not-allowed" class="hinweis">Aufspielen geht nur auf einer gesicherten Seite (Adresse beginnt mit <strong>https://</strong>). Öffne diese Seite stattdessen mit ihrer https-Adresse.</span>
+      </esp-web-install-button>
+    </p>
+  </div>
+  <p>Danach zeigt der Leser in Deinem Heimnetz eine eigene Webseite. Die nächsten Schritte stehen in der Anleitung: <a href="https://github.com/wolfsoftgmbh/fujinet-nfc/blob/main/docs/anleitung-de.md">Deutsch</a> · <a href="https://github.com/wolfsoftgmbh/fujinet-nfc/blob/main/docs/guide-en.md">English</a>.</p>
+</section>
+</main>
+
+<script>
+(function () {
+  var wahl = (navigator.language || "en").slice(0, 2) === "de" ? "de" : "en";
+  var knoepfe = document.querySelectorAll(".sprache button");
+  function setze(l) {
+    document.documentElement.setAttribute("data-lang", l);
+    document.documentElement.setAttribute("lang", l);
+    knoepfe.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.wahl === l)); });
+  }
+  knoepfe.forEach(function (b) { b.addEventListener("click", function () { setze(b.dataset.wahl); }); });
+  setze(wahl);
+})();
+</script>
+<script>
+// Show-password tick box in the WiFi (Improv) dialog of ESP Web Tools. The dialog is a custom element
+// with an open shadow root; its password field is re-created on every state change.
+(function () {
+  var MARKE = "data-passwort-haken";
+  function text() {
+    return document.documentElement.getAttribute("data-lang") === "de" ? "Passwort anzeigen" : "Show password";
+  }
+  function ergaenze(wurzel) {
+    var felder = wurzel.querySelectorAll('ew-filled-text-field[name="password"]');
+    Array.prototype.forEach.call(felder, function (feld) {
+      if (feld.hasAttribute(MARKE)) { return; }
+      feld.setAttribute(MARKE, "1");
+      var zeile = document.createElement("label");
+      zeile.style.cssText = "display:flex;align-items:center;gap:8px;margin:8px 0;font:16px/1.4 system-ui,sans-serif;color:inherit;cursor:pointer";
+      var haken = document.createElement("input");
+      haken.type = "checkbox";
+      haken.style.cssText = "width:20px;height:20px;margin:0;cursor:pointer";
+      haken.addEventListener("change", function () {
+        var art = haken.checked ? "text" : "password";
+        feld.type = art;
+        feld.setAttribute("type", art);
+      });
+      zeile.appendChild(haken);
+      zeile.appendChild(document.createTextNode(text()));
+      feld.parentNode.insertBefore(zeile, feld.nextSibling);
+    });
+  }
+  function beobachte(dialog, versuch) {
+    if (!dialog.shadowRoot) {
+      if (versuch < 20) { setTimeout(function () { beobachte(dialog, versuch + 1); }, 50); }
+      return;
+    }
+    if (dialog.hasAttribute("data-passwort-beobachtet")) { return; }
+    dialog.setAttribute("data-passwort-beobachtet", "1");
+    new MutationObserver(function () { ergaenze(dialog.shadowRoot); })
+      .observe(dialog.shadowRoot, { childList: true, subtree: true });
+    ergaenze(dialog.shadowRoot);
+  }
+  function pruefe(knoten) {
+    if (knoten.nodeType === 1 && knoten.localName === "ewt-install-dialog") { beobachte(knoten, 0); }
+  }
+  new MutationObserver(function (liste) {
+    liste.forEach(function (m) { Array.prototype.forEach.call(m.addedNodes, pruefe); });
+  }).observe(document.body, { childList: true });
+  Array.prototype.forEach.call(document.body.children, pruefe);
+})();
+</script>
+<script type="module" src="vendor/esp-web-tools/web/install-button.js"></script>
+</body>
+</html>
