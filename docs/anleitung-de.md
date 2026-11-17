@@ -79,10 +79,11 @@ Sonst findet der Leser das Modul nicht.
 
 ![Verdrahtungsplan: PN532 SDA an D2, SCL an D1, Summer an D7, WS2812-Daten an D8, Strom an 5V und G; DIP-Schalter 1 ON, 2 OFF](img/verdrahtung.svg)
 
-Die Zeichnung ordnet die Bauteile so an, dass sich möglichst wenige Leitungen kreuzen; im Gehäuse liegen
-sie anders (Fotos unten). Die Pins sitzen an den Stellen der echten Platinen. Der D1 mini ist von der
-Bauteileseite gezeigt (ESP-Modul oben), die I2C-Leiste des PN532 hat GND, VCC, SDA, SCL, die WS2812-Platine
-die Eingangsseite +5V, Din, GND. Die farbigen Leitungen sind die Signale, rot ist 5V, schwarz ist G (Masse). Kleine Bögen heißen: Die
+Die Zeichnung ordnet die Bauteile wie im Gehäuse an (Fotos unten): PN532 oben, WS2812-Platine in der Mitte, Summer
+rechts, D1 mini unten. Der D1 mini ist von der Lötseite gezeigt, also von der Seite mit dem USB-Chip (CH340) und dem
+Aufdruck im MAKERSHOP-Stil, aber ohne ESP-Modul; das Modul sitzt auf der Rückseite. Die Pins sitzen an den Stellen der
+echten Platinen: I2C-Leiste des PN532 am rechten Rand (SCL, SDA, VCC, GND von oben), die WS2812-Platine mit der
+Eingangsseite GND, Din, +5V. Die farbigen Leitungen sind die Signale, rot ist 5V, schwarz ist G (Masse). Kleine Bögen heißen: Die
 Leitungen kreuzen sich nur im Bild, sie berühren sich nicht; ein Punkt heißt: Hier laufen Leitungen
 zusammen. Beide Versorgungspins gibt es am D1 mini nur **einmal**: Alle 5V-Leitungen (PN532, LED) und
 alle G-Leitungen (PN532, Summer, LED) treffen sich dort und werden zusammengelötet.
@@ -94,7 +95,7 @@ alle G-Leitungen (PN532, Summer, LED) treffen sich dort und werden zusammengelö
 | PN532 SDA | D2 |
 | PN532 SCL | D1 |
 | Summer + | D7 |
-| Summer − | G |
+| Summer - (Minus) | G |
 | WS2812 DIN (Dateneingang) | D8 |
 | WS2812 5V / VCC | 5V |
 | WS2812 GND | G |

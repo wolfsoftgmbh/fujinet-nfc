@@ -79,10 +79,11 @@ I2C. Without it the reader does not find the module.
 
 ![Wiring plan: PN532 SDA to D2, SCL to D1, buzzer to D7, WS2812 data to D8, power to 5V and G; DIP switch 1 ON, 2 OFF](img/wiring.svg)
 
-The drawing arranges the parts so that as few wires as possible cross; in the case they sit differently
-(photos below). The pins are where they are on the real boards: the D1 mini seen from its component side
-(ESP module on top), the PN532 I2C header with GND, VCC, SDA, SCL, and the WS2812 board with its input side
-+5V, Din, GND. Coloured wires are the signals, red is 5V, black is G (ground). A small arc means the wires
+The drawing arranges the parts as in the case (photos below): PN532 on top, WS2812 board in the middle, buzzer to the
+right, D1 mini at the bottom. The D1 mini is shown from the solder side, the side with the USB chip (CH340) and
+the MAKERSHOP-style print but without the ESP module; the module sits on the other side. The pins are where they are
+on the real boards: PN532 I2C header on its right edge (SCL, SDA, VCC, GND from top) and the WS2812 board with its
+input side GND, Din, +5V. Coloured wires are the signals, red is 5V, black is G (ground). A small arc means the wires
 only cross in the picture and do not touch; a dot means wires join there. The D1 mini has each of these two
 supply pins only **once**: all 5V wires (PN532, LED) and all G wires (PN532, buzzer, LED) meet there and are
 soldered together.
@@ -94,7 +95,7 @@ soldered together.
 | PN532 SDA | D2 |
 | PN532 SCL | D1 |
 | Buzzer + | D7 |
-| Buzzer − | G |
+| Buzzer - (minus) | G |
 | WS2812 DIN (data in) | D8 |
 | WS2812 5V / VCC | 5V |
 | WS2812 GND | G |

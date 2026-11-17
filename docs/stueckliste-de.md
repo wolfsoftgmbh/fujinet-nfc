@@ -33,6 +33,7 @@ Muss **passiv** sein: Der Leser spielt Melodien per PWM an Pin D7. Ein aktiver S
 |---|---|---:|
 | [BerryBase](https://www.berrybase.de/ky-006-passives-buzzer-modul) | KY-006, Passives Buzzer Modul | 1,10 € * |
 | [funduino](https://funduino.com/en/products/ky-006-passiver-buzzer-alarm-modul-fur-arduino) | KY-006 Buzzer Modul - passiv, 3-5 V, PWM-gesteuert | 1,30 € |
+| [Reichelt](https://www.reichelt.de/de/de/shop/produkt/entwicklerboards_-_summer_passiv-282661) | Entwicklerboards - Summer, passiv (IDUINO SE044, Art.-Nr. DEBO BUZZER P1) (3 Pins: Signal, VCC (3,3 / 5 V), GND, der mittlere Pin ist hier also VCC und nicht frei; Preis am 2026-11-17 gelesen) | 1,60 € |
 
 ## Eine WS2812-LED
 
@@ -50,6 +51,7 @@ Typ NTAG213, NTAG215 oder NTAG216 (die Firmware schreibt NDEF-Text auf NTAG-Chip
 |---|---|---:|
 | [BerryBase](https://www.berrybase.de/rfid-nfc-tags-ntag215-25mm-selbstklebend-weiss-10-stueck) | RFID / NFC Tags, Ntag215, 25mm, selbstklebend, weiß, 10 Stück (10 Stück) | 4,40 € |
 | [Roboter-Bausatz](https://www.roboter-bausatz.de/p/10-stueck-nfc-tags-sticker-13.56mhz-ntag215-rund-25mm-iso14443a-ntag-215) | 10 Stück NFC Tags Sticker 13.56MHz Ntag215 rund 25mm ISO14443A NTAG 215 (10 Stück) | 2,39 € |
+| [Reichelt](https://www.reichelt.de/de/de/shop/produkt/rfid_nfc_tags_selbstklebend_weiss_10_stueck-313934) | RFID / NFC Tags, Ntag215, 25mm, selbstklebend, weiß, 10 Stück (10 Stück, Preis am 2026-11-17 gelesen) | 4,95 € |
 | [funduino](https://funduinoshop.com/en/electronic-modules/wireless-iot/rfid-nfc/rfid-tag-sticker-25mm-nfc-tag213) | NFC Sticker TAG213 - ISO14443 A, Ø 25 mm, 180 Byte (1 Sticker, Chip-Typ laut Seite TAG213) | 1,39 € * |
 
 ## Dupont-Jumperkabel (Buchse-Buchse, etwa 20 cm)
@@ -68,7 +70,9 @@ Das Kabel muss Daten übertragen, nicht nur Strom; manche billigen Ladekabel kö
 | Händler | Produkt (laut Seite) | Preis |
 |---|---|---:|
 | [BerryBase](https://www.berrybase.de/blackcotton-usb-a-usb-c-kabel-usb-2.0-schwarz-1-0m) | BlackCotton USB-A - USB-C Kabel, USB 2.0, schwarz, 1,0m (USB-A auf USB-C) | 1,60 € |
-| [BerryBase](https://www.berrybase.de/blackcotton-micro-usb-2.0-kabel-schwarz-1-0m) | BlackCotton Micro USB 2.0 Kabel, schwarz, 1,0m (USB-A auf Micro-USB) | 1,90 € * |
+| [Reichelt](https://www.reichelt.de/de/de/shop/produkt/sync-_ladekabel_usb-a_-_c_180_1_m-339164) | Sync- & Ladekabel, USB-A -> C, 180°, 1 m (LOGILINK CU0192) (USB-A auf USB-C, USB 2.0 Hi-Speed (480 Mbit/s), USB-C-Stecker 180° gewinkelt; Preis am 2026-11-17 gelesen) | 2,99 € |
+| [BerryBase](https://www.berrybase.de/blackcotton-micro-usb-2.0-kabel-schwarz-1-0m) | BlackCotton Micro USB 2.0 Kabel, schwarz, 1,0m (USB-A auf Micro-USB) | 1,90 € |
+| [Reichelt](https://www.reichelt.de/de/de/shop/produkt/sync-_ladekabel_usb-a_-_micro_b_1_0_m-286826) | Sync- & Ladekabel, USB-A -> micro B, 1,0 m (GOOBAY 96193) (USB-A auf Micro-USB, Daten- und Ladekabel; Preis am 2026-11-17 gelesen) | 1,40 € * |
 
 ## USB-Netzteil, 5 V, mindestens 1 A (besser 2 A)
 
@@ -78,6 +82,7 @@ Beim Beschreiben von Karten fließt mehr Strom als beim Lesen. Ein altes Handy-L
 |---|---|---:|
 | [Roboter-Bausatz](https://www.roboter-bausatz.de/p/usb-netzteil-ladegeraet-5v-2a-schwarz) | USB Ladegerät Netzteil 5V 2A (Schwarz) | 3,35 € * |
 | [BerryBase](https://www.berrybase.de/dual-usb-netzteil-ladeadapter-2-4a-2x-usb-flache-bauform-weiss) | Dual USB Netzteil / Ladeadapter, 2,4A, 2x USB, flache Bauform, weiß | 12,90 € |
+| [Reichelt](https://www.reichelt.de/de/de/shop/produkt/usb-ladegeraet_5_v_2400_ma_dual_schwarz-265657) | USB-Ladegerät, 5 V, 2400 mA, dual, schwarz (GOOBAY 44951) (2x USB-A, max. 2,4 A; Preis am 2026-11-17 gelesen) | 5,80 € |
 
 ## Tasmota-Steckdose (optional)
 
@@ -88,6 +93,7 @@ Nur für den vollautomatischen Betrieb. Alle drei werden mit installiertem Tasmo
 | [BerryBase](https://www.berrybase.de/nous-a1t-smarte-steckdose-tasmota-firmware-wlan) | Nous A1T Smarte Steckdose, Tasmota Firmware, WLAN | 16,90 € * |
 | [voelkner](https://www.voelkner.de/products/12146122/Nous-A1T-Smarte-Steckdose-Tasmota-Firmware-WLAN.html) | Nous A1T smarter Stecker Tasmota 1er 3450W/16A/Messung/Tasmota | 18,42 € |
 | [BerryBase](https://www.berrybase.de/delock-wlan-steckdose-mit-integriertem-webinterface-energieueberwachung-tasmota-firmware) | Delock WLAN Steckdose mit integriertem Webinterface & Energieüberwachung, Tasmota Firmware | 23,50 € |
+| [Reichelt](https://www.reichelt.de/de/de/shop/produkt/schaltbare_wlan-steckdose_tasmota-347718) | Schaltbare WLAN-Steckdose, Tasmota (NOUS A1T) (max. 2500 W (10 A), Lieferzeit 3 bis 5 Werktage; Preis am 2026-11-17 gelesen) | 17,95 € |
 
 ## Gehäuse (optional)
 
@@ -105,9 +111,9 @@ Je Teil das günstigste geprüfte Angebot (jeweils eine Verkaufseinheit, wie ang
 | Eine WS2812-LED | [Roboter-Bausatz](https://www.roboter-bausatz.de/p/1bit-rgb-led-ring-ws2812-5v-aehnl.-neopixel) | 0,75 € |
 | NFC-Karten oder -Tags (NTAG213/215/216) | [funduino](https://funduinoshop.com/en/electronic-modules/wireless-iot/rfid-nfc/rfid-tag-sticker-25mm-nfc-tag213) | 1,39 € |
 | Dupont-Jumperkabel (Buchse-Buchse, etwa 20 cm) | [BerryBase](https://www.berrybase.de/40pin-jumper-dupont-kabel-set-je-1x-f-f-m-m-f-m-20cm) | 4,90 € |
-| USB-Kabel mit Datenleitungen (zum Flashen des D1 mini und zur Stromversorgung) | [BerryBase](https://www.berrybase.de/blackcotton-micro-usb-2.0-kabel-schwarz-1-0m) | 1,90 € |
+| USB-Kabel mit Datenleitungen (zum Flashen des D1 mini und zur Stromversorgung) | [Reichelt](https://www.reichelt.de/de/de/shop/produkt/sync-_ladekabel_usb-a_-_micro_b_1_0_m-286826) | 1,40 € |
 | USB-Netzteil, 5 V, mindestens 1 A (besser 2 A) | [Roboter-Bausatz](https://www.roboter-bausatz.de/p/usb-netzteil-ladegeraet-5v-2a-schwarz) | 3,35 € |
 | Tasmota-Steckdose (optional) | [BerryBase](https://www.berrybase.de/nous-a1t-smarte-steckdose-tasmota-firmware-wlan) | 16,90 € |
 
-- **Ohne Steckdose: 22,86 €**
-- **Mit Steckdose: 39,76 €**
+- **Ohne Steckdose: 22,36 €**
+- **Mit Steckdose: 39,26 €**
