@@ -27,13 +27,14 @@ A "PN532 NFC RFID module V3" with two DIP switches (set them to I2C, see the gui
 
 ## Passive buzzer
 
-Must be **passive**: the reader plays melodies by PWM on pin D7. An active buzzer only beeps. The KY-006 module has three pins: signal (S) to D7, minus to G, the middle pin stays free.
+Must be **passive**: the reader plays melodies by PWM on pin D7. An active buzzer only beeps. The KY-006 module has three pins: signal (S) to D7, minus to G, the middle pin stays free. A bare two-leg magnetic buzzer works too: + to D7, - to G.
 
 | Shop | Product (as on the page) | Price |
 |---|---|---:|
-| [BerryBase](https://www.berrybase.de/ky-006-passives-buzzer-modul) | KY-006, Passives Buzzer Modul | EUR 1.10 * |
+| [BerryBase](https://www.berrybase.de/ky-006-passives-buzzer-modul) | KY-006, Passives Buzzer Modul | EUR 1.10 |
 | [funduino](https://funduino.com/en/products/ky-006-passiver-buzzer-alarm-modul-fur-arduino) | KY-006 Buzzer Modul - passiv, 3-5 V, PWM-gesteuert | EUR 1.30 |
 | [Reichelt](https://www.reichelt.de/de/de/shop/produkt/entwicklerboards_-_summer_passiv-282661) | Entwicklerboards - Summer, passiv (IDUINO SE044, Art.-Nr. DEBO BUZZER P1) (3 pins: signal, VCC (3.3 / 5 V), GND, so the middle pin is VCC here, not free; price read 2026-11-17) | EUR 1.60 |
+| [Reichelt](https://www.reichelt.de/de/de/shop/produkt/buzzer_87db_2400_hz_5_v-360850) | PUI AUDIO Buzzer, 87dB, 2400 Hz, 5 V (AT-1224-TWT-5V-2, magnetisch) (bare magnetic buzzer (externally driven, so passive), 2 legs: + to D7, - to G; the one in the sample reader; price read 2026-11-17) | EUR 0.60 * |
 
 ## One WS2812 LED
 
@@ -107,7 +108,7 @@ Per part the cheapest verified offer (one sales unit each, as offered), excludin
 |---|---|---:|
 | Wemos D1 mini (ESP8266) | [Makershop](https://www.makershop.de/plattformen/d1-mini/esp8266-mini-board/) | EUR 3.80 |
 | PN532 NFC module with I2C | [funduino](https://funduino.com/products/pn532-nfc-rfid-v3-modul-fur-arduino-und-co) | EUR 5.67 |
-| Passive buzzer | [BerryBase](https://www.berrybase.de/ky-006-passives-buzzer-modul) | EUR 1.10 |
+| Passive buzzer | [Reichelt](https://www.reichelt.de/de/de/shop/produkt/buzzer_87db_2400_hz_5_v-360850) | EUR 0.60 |
 | One WS2812 LED | [Roboter-Bausatz](https://www.roboter-bausatz.de/p/1bit-rgb-led-ring-ws2812-5v-aehnl.-neopixel) | EUR 0.75 |
 | NFC cards or tags (NTAG213/215/216) | [funduino](https://funduinoshop.com/en/electronic-modules/wireless-iot/rfid-nfc/rfid-tag-sticker-25mm-nfc-tag213) | EUR 1.39 |
 | Dupont jumper wires (female-female, about 20 cm) | [BerryBase](https://www.berrybase.de/40pin-jumper-dupont-kabel-set-je-1x-f-f-m-m-f-m-20cm) | EUR 4.90 |
@@ -115,5 +116,5 @@ Per part the cheapest verified offer (one sales unit each, as offered), excludin
 | USB power supply, 5 V, at least 1 A (2 A is better) | [Roboter-Bausatz](https://www.roboter-bausatz.de/p/usb-netzteil-ladegeraet-5v-2a-schwarz) | EUR 3.35 |
 | Tasmota smart plug (optional) | [BerryBase](https://www.berrybase.de/nous-a1t-smarte-steckdose-tasmota-firmware-wlan) | EUR 16.90 |
 
-- **Without smart plug: EUR 22.36**
-- **With smart plug: EUR 39.26**
+- **Without smart plug: EUR 21.86**
+- **With smart plug: EUR 38.76**

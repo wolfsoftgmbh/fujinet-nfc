@@ -27,13 +27,14 @@ Ein "PN532 NFC RFID Modul V3" mit zwei DIP-Schaltern (auf I2C stellen, siehe Anl
 
 ## Passiver Summer
 
-Muss **passiv** sein: Der Leser spielt Melodien per PWM an Pin D7. Ein aktiver Summer piept nur. Das Modul KY-006 hat drei Pins: Signal (S) an D7, Minus an G, der mittlere bleibt frei.
+Muss **passiv** sein: Der Leser spielt Melodien per PWM an Pin D7. Ein aktiver Summer piept nur. Das Modul KY-006 hat drei Pins: Signal (S) an D7, Minus an G, der mittlere bleibt frei. Ein einzelner Magnet-Summer mit zwei Beinen geht auch: + an D7, - an G.
 
 | Händler | Produkt (laut Seite) | Preis |
 |---|---|---:|
-| [BerryBase](https://www.berrybase.de/ky-006-passives-buzzer-modul) | KY-006, Passives Buzzer Modul | 1,10 € * |
+| [BerryBase](https://www.berrybase.de/ky-006-passives-buzzer-modul) | KY-006, Passives Buzzer Modul | 1,10 € |
 | [funduino](https://funduino.com/en/products/ky-006-passiver-buzzer-alarm-modul-fur-arduino) | KY-006 Buzzer Modul - passiv, 3-5 V, PWM-gesteuert | 1,30 € |
 | [Reichelt](https://www.reichelt.de/de/de/shop/produkt/entwicklerboards_-_summer_passiv-282661) | Entwicklerboards - Summer, passiv (IDUINO SE044, Art.-Nr. DEBO BUZZER P1) (3 Pins: Signal, VCC (3,3 / 5 V), GND, der mittlere Pin ist hier also VCC und nicht frei; Preis am 2026-11-17 gelesen) | 1,60 € |
+| [Reichelt](https://www.reichelt.de/de/de/shop/produkt/buzzer_87db_2400_hz_5_v-360850) | PUI AUDIO Buzzer, 87dB, 2400 Hz, 5 V (AT-1224-TWT-5V-2, magnetisch) (einzelner Magnet-Summer (extern angesteuert, also passiv), 2 Beine: + an D7, - an G; der im Musterleser; Preis am 2026-11-17 gelesen) | 0,60 € * |
 
 ## Eine WS2812-LED
 
@@ -107,7 +108,7 @@ Je Teil das günstigste geprüfte Angebot (jeweils eine Verkaufseinheit, wie ang
 |---|---|---:|
 | Wemos D1 mini (ESP8266) | [Makershop](https://www.makershop.de/plattformen/d1-mini/esp8266-mini-board/) | 3,80 € |
 | PN532-NFC-Modul mit I2C | [funduino](https://funduino.com/products/pn532-nfc-rfid-v3-modul-fur-arduino-und-co) | 5,67 € |
-| Passiver Summer | [BerryBase](https://www.berrybase.de/ky-006-passives-buzzer-modul) | 1,10 € |
+| Passiver Summer | [Reichelt](https://www.reichelt.de/de/de/shop/produkt/buzzer_87db_2400_hz_5_v-360850) | 0,60 € |
 | Eine WS2812-LED | [Roboter-Bausatz](https://www.roboter-bausatz.de/p/1bit-rgb-led-ring-ws2812-5v-aehnl.-neopixel) | 0,75 € |
 | NFC-Karten oder -Tags (NTAG213/215/216) | [funduino](https://funduinoshop.com/en/electronic-modules/wireless-iot/rfid-nfc/rfid-tag-sticker-25mm-nfc-tag213) | 1,39 € |
 | Dupont-Jumperkabel (Buchse-Buchse, etwa 20 cm) | [BerryBase](https://www.berrybase.de/40pin-jumper-dupont-kabel-set-je-1x-f-f-m-m-f-m-20cm) | 4,90 € |
@@ -115,5 +116,5 @@ Je Teil das günstigste geprüfte Angebot (jeweils eine Verkaufseinheit, wie ang
 | USB-Netzteil, 5 V, mindestens 1 A (besser 2 A) | [Roboter-Bausatz](https://www.roboter-bausatz.de/p/usb-netzteil-ladegeraet-5v-2a-schwarz) | 3,35 € |
 | Tasmota-Steckdose (optional) | [BerryBase](https://www.berrybase.de/nous-a1t-smarte-steckdose-tasmota-firmware-wlan) | 16,90 € |
 
-- **Ohne Steckdose: 22,36 €**
-- **Mit Steckdose: 39,26 €**
+- **Ohne Steckdose: 21,86 €**
+- **Mit Steckdose: 38,76 €**

@@ -139,11 +139,13 @@ TEILE: tuple[Teil, ...] = (
         name_de="Passiver Summer",
         anmerkung_en=(
             "Must be **passive**: the reader plays melodies by PWM on pin D7. An active buzzer only beeps. "
-            "The KY-006 module has three pins: signal (S) to D7, minus to G, the middle pin stays free."
+            "The KY-006 module has three pins: signal (S) to D7, minus to G, the middle pin stays free. "
+            "A bare two-leg magnetic buzzer works too: + to D7, - to G."
         ),
         anmerkung_de=(
             "Muss **passiv** sein: Der Leser spielt Melodien per PWM an Pin D7. Ein aktiver Summer piept "
-            "nur. Das Modul KY-006 hat drei Pins: Signal (S) an D7, Minus an G, der mittlere bleibt frei."
+            "nur. Das Modul KY-006 hat drei Pins: Signal (S) an D7, Minus an G, der mittlere bleibt frei. "
+            "Ein einzelner Magnet-Summer mit zwei Beinen geht auch: + an D7, - an G."
         ),
         angebote=(
             Angebot(
@@ -166,6 +168,16 @@ TEILE: tuple[Teil, ...] = (
                 160,
                 hinweis_en="3 pins: signal, VCC (3.3 / 5 V), GND, so the middle pin is VCC here, not free; price read 2026-11-17",
                 hinweis_de="3 Pins: Signal, VCC (3,3 / 5 V), GND, der mittlere Pin ist hier also VCC und nicht frei; Preis am 2026-11-17 gelesen",
+            ),
+            # Im Musterleser verbaut (bei Reichelt gekauft).
+            # Passiv: laut PUI-Datenblatt "externally driven" magnetischer Wandler, 47 Ohm, 3-7 V, max. 40 mA.
+            Angebot(
+                "Reichelt",
+                "https://www.reichelt.de/de/de/shop/produkt/buzzer_87db_2400_hz_5_v-360850",
+                "PUI AUDIO Buzzer, 87dB, 2400 Hz, 5 V (AT-1224-TWT-5V-2, magnetisch)",
+                60,
+                hinweis_en="bare magnetic buzzer (externally driven, so passive), 2 legs: + to D7, - to G; the one in the sample reader; price read 2026-11-17",
+                hinweis_de="einzelner Magnet-Summer (extern angesteuert, also passiv), 2 Beine: + an D7, - an G; der im Musterleser; Preis am 2026-11-17 gelesen",
             ),
         ),
     ),
