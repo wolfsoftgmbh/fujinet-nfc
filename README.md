@@ -24,6 +24,10 @@ flowchart LR
 
 <img src="docs/img/leser-im-gehaeuse.jpg" alt="The reader open in its case: D1 mini, buzzer, LED board and PN532" width="360">
 
+**Videos:** [tap a card, the game starts](https://www.youtube.com/watch?v=JJhER-jWl_A) · [flash the reader from the browser](https://www.youtube.com/watch?v=k8EXn6m4_JI)
+
+[![Video: a card is held over the reader, the Atari starts M.U.L.E.](docs/img/video-bedienung.jpg)](https://www.youtube.com/watch?v=JJhER-jWl_A)
+
 ## Get started
 
 1. **Parts:** [parts list](docs/parts-en.md) ([Stückliste, Deutsch](docs/stueckliste-de.md)), with shops and

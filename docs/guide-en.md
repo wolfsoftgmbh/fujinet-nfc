@@ -127,6 +127,8 @@ language.
 
 ### Flash page (easiest, recommended)
 
+Video: [flash the reader from the browser](https://www.youtube.com/watch?v=k8EXn6m4_JI) (YouTube). What it looks like at the Atari afterwards: [tap a card, the game starts](https://www.youtube.com/watch?v=JJhER-jWl_A).
+
 The project has a flash page that installs the firmware over USB, with nothing to install on your
 computer: **<https://wolfsoftgmbh.github.io/fujinet-nfc/>**
 
