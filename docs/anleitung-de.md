@@ -40,6 +40,10 @@ und schaltet es wieder ein, und das Spiel bootet von selbst.
 
 ## 1. Benötigtes Material
 
+Fertig aufgebaut gibt es den Leser im Wolfsoft-Shop: [Leser](https://wolfsoft.de/a/15606) ·
+[Tasmota-Steckdose](https://wolfsoft.de/a/15607) · [Set mit beidem](https://wolfsoft.de/a/15608).
+Er kommt mit der deutschen Firmware; dann entfallen die Abschnitte 1 bis 3.
+
 ### Der Leser
 
 | Teil | Hinweis |

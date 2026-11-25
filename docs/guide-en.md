@@ -40,6 +40,10 @@ so the game boots by itself.
 
 ## 1. What you need
 
+The assembled reader is available in the Wolfsoft shop: [reader](https://wolfsoft.de/a/15606) ·
+[Tasmota smart plug](https://wolfsoft.de/a/15607) · [set with both](https://wolfsoft.de/a/15608).
+It comes with the German firmware; sections 1 to 3 are then not needed.
+
 ### The reader
 
 | Part | Notes |
