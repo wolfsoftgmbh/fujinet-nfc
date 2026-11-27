@@ -4,6 +4,9 @@ Start Atari 8-bit games by putting an NFC card on a small reader, like
 [Zaparoo](https://zaparoo.org/) on a MiSTer, but for a real Atari 400/800, XL or XE with a
 [FujiNet](https://fujinet.online/).
 
+**Buy it ready-made** in the Wolfsoft shop: [reader](https://wolfsoft.de/a/15606) ·
+[Tasmota smart plug](https://wolfsoft.de/a/15607) · [set with both](https://wolfsoft.de/a/15608)
+
 - The reader (Wemos D1 mini + PN532, ESPHome) reads a disk image path from the card, for example
   `tnfs://apps.irata.online/Atari_8-bit/Games/Homesoft/M/MULE.xex`, and tells the FujiNet over WiFi to
   mount it.
@@ -23,9 +26,6 @@ flowchart LR
 ```
 
 <img src="docs/img/leser-im-gehaeuse.jpg" alt="The reader open in its case: D1 mini, buzzer, LED board and PN532" width="360">
-
-**Ready-made:** the assembled reader is available in the Wolfsoft shop: [reader](https://wolfsoft.de/a/15606) ·
-[Tasmota smart plug](https://wolfsoft.de/a/15607) · [set with both](https://wolfsoft.de/a/15608).
 
 **Videos:** [tap a card, the game starts](https://www.youtube.com/watch?v=JJhER-jWl_A) · [flash the reader from the browser](https://www.youtube.com/watch?v=k8EXn6m4_JI)
 
